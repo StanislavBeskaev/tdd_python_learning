@@ -1,0 +1,7 @@
+*probe*
+*env
+*.db
+files
+data
+tmp
+.coverage
