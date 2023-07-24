@@ -6,3 +6,4 @@ data
 tmp
 .coverage
 *log
+*.sqlite3

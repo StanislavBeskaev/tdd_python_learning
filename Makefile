@@ -8,18 +8,18 @@ fmt: format
 format: isort black
 
 isort:
-	isort tests
+	isort superlists
 
 isort_check:
-	isort --check-only tests
+	isort --check-only superlists
 
 
 black:
-	black --config pyproject.toml tests
+	black --config pyproject.toml superlists
 
 black_check:
-	black --config pyproject.toml --diff --check tests
+	black --config pyproject.toml --diff --check superlists
 
 
 flake:
-	flake8 --config .flake8 tests
+	flake8 --config .flake8 superlists
