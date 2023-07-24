@@ -5,3 +5,4 @@ files
 data
 tmp
 .coverage
+*log
