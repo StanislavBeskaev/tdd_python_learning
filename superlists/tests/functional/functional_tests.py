@@ -40,9 +40,7 @@ class NewVisitorTest(unittest.TestCase):
         inputbox.send_keys(Keys.ENTER)
         time.sleep(1)  # Явное ожидание перезагрузки страницы
 
-        table = self.browser.find_element(by=By.ID, value="id_list_table")
-        rows = table.find_elements(by=By.TAG_NAME, value="tr")
-        self.assertIn("1: Купить павлиньи перья", [row.text for row in rows])
+        self.check_for_row_in_list_table("1: Купить павлиньи перья")
 
         # Текстовое поле по-прежнему приглашает её добавить ещё один элемент.
         # Она вводит "Сделать мушку из павлиньих перьев"
@@ -53,10 +51,8 @@ class NewVisitorTest(unittest.TestCase):
         time.sleep(1)
 
         # Страница снова обновляется, и теперь показывает оба элемента её списка
-        table = self.browser.find_element(by=By.ID, value="id_list_table")
-        rows = table.find_elements(by=By.TAG_NAME, value="tr")
-        self.assertIn("1: Купить павлиньи перья", [row.text for row in rows])
-        self.assertIn("2: Сделать мушку из павлиньих перьев", [row.text for row in rows])
+        self.check_for_row_in_list_table("1: Купить павлиньи перья")
+        self.check_for_row_in_list_table("2: Сделать мушку из павлиньих перьев")
 
         # Эдит интересно, запомнит ли сайт её список. Далее она видит, что
         # сайт сгенерировал для неё уникальный URL-адрес - об этом
@@ -66,6 +62,12 @@ class NewVisitorTest(unittest.TestCase):
         # Она посещает этот URL-адрес - её список по-прежнему там
 
         # Удовлетворённая, она снова ложится спать
+
+    def check_for_row_in_list_table(self, row_text: str):
+        """Проверка наличия строки в таблице списка"""
+        table = self.browser.find_element(by=By.ID, value="id_list_table")
+        rows = table.find_elements(by=By.TAG_NAME, value="tr")
+        self.assertIn(row_text, [row.text for row in rows])
 
 
 if __name__ == '__main__':
