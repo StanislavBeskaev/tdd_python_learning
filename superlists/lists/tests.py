@@ -1,7 +1,5 @@
 from django.test import TestCase
-
 from lists.models import Item
-
 
 HOME_TEMPLATE = "home.html"
 
@@ -14,12 +12,25 @@ class HomePageTest(TestCase):
         response = self.client.get("/")
         self.assertTemplateUsed(response, HOME_TEMPLATE)
 
+    def test_only_saves_items_when_necessary(self):
+        """Тест: сохраняет элементы, только когда нужно"""
+        self.client.get("/")
+        self.assertEqual(Item.objects.count(), 0)
+
     def test_can_save_a_POST_request(self):
         """Тест: можно сохранить post-запрос"""
-        new_item = "A new list item"
-        response = self.client.post("/", data={"item_text": new_item})
-        self.assertIn(new_item, response.content.decode())
-        self.assertTemplateUsed(response, HOME_TEMPLATE)
+        new_item_text = "A new list item"
+        response = self.client.post("/", data={"item_text": new_item_text})
+
+        self.assertEqual(Item.objects.count(), 1)
+        new_item = Item.objects.first()
+        self.assertEqual(new_item.text, new_item_text)
+
+    def test_redirects_after_POST(self):
+        """Тест: переадресация после post-запроса"""
+        response = self.client.post("/", data={"item_text": "some text"})
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response["location"], "/")
 
 
 class ItemModelTest(TestCase):
