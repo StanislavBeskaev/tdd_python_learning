@@ -1,14 +1,12 @@
 import time
-import unittest
 
+from django.test import LiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver import Keys
 from selenium.webdriver.common.by import By
 
-APP_URL = "http://localhost:8000"
 
-
-class NewVisitorTest(unittest.TestCase):
+class NewVisitorTest(LiveServerTestCase):
     """Тест нового посетителя"""
 
     def setUp(self) -> None:
@@ -21,7 +19,7 @@ class NewVisitorTest(unittest.TestCase):
         """Можно начать список и получить его позже"""
         # Эдит слышала про новое крутое онлайн-приложение со списком
         # неотложных дел. Она решает оценить его домашнюю страницу
-        self.browser.get(APP_URL)
+        self.browser.get(self.live_server_url)
 
         # Она видит, что заголовок и шапка страницы говорят о списках неотложных дел
         self.assertIn("To-Do", self.browser.title)
@@ -68,7 +66,3 @@ class NewVisitorTest(unittest.TestCase):
         table = self.browser.find_element(by=By.ID, value="id_list_table")
         rows = table.find_elements(by=By.TAG_NAME, value="tr")
         self.assertIn(row_text, [row.text for row in rows])
-
-
-if __name__ == '__main__':
-    unittest.main(warnings="ignore")
