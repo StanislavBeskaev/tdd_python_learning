@@ -30,7 +30,7 @@ class HomePageTest(TestCase):
     def test_can_save_a_POST_request(self):
         """Тест: можно сохранить post-запрос"""
         new_item_text = "A new list item"
-        response = self.client.post("/", data={"item_text": new_item_text})
+        self.client.post("/", data={"item_text": new_item_text})
 
         self.assertEqual(Item.objects.count(), 1)
         new_item = Item.objects.first()
