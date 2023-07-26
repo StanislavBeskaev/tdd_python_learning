@@ -81,6 +81,8 @@ class NewVisitorTest(LiveServerTestCase):
         # Фрэнсис начинает новый список, вводя новый элемент. Он менее интересен, чем список Эдит
         self.add_new_element("Купить молоко")
 
+        self.wait_for_row_in_list_table("1: Купить молоко")
+
         # Фрэнсис получает уникальный URL-адрес
         francis_list_url = self.browser.current_url
         self.assertRegex(francis_list_url, "/lists/.+")
