@@ -7,7 +7,12 @@ def home_page(request: HttpRequest) -> HttpResponse:
     """Домашняя страница"""
     if request.method == "POST":
         Item.objects.create(text=request.POST.get("item_text", ""))
-        return redirect("/")
+        return redirect("/lists/unique-list-in-world/")
 
+    return render(request, "home.html")
+
+
+def view_list(request: HttpRequest) -> HttpResponse:
+    """Представление списка элементов"""
     items = Item.objects.all()
-    return render(request, "home.html", {"items": items})
+    return render(request, "list.html", {"items": items})

@@ -12,16 +12,6 @@ class HomePageTest(TestCase):
         response = self.client.get("/")
         self.assertTemplateUsed(response, HOME_TEMPLATE)
 
-    def test_displays_all_list_items(self):
-        """Тест: отображаются все элементы списка"""
-        new_item_texts = ("itemey 1", "itemey 2")
-        [Item.objects.create(text=item_text) for item_text in new_item_texts]
-
-        response = self.client.get("/")
-
-        for item_text in new_item_texts:
-            self.assertIn(item_text, response.content.decode())
-
     def test_only_saves_items_when_necessary(self):
         """Тест: сохраняет элементы, только когда нужно"""
         self.client.get("/")
@@ -40,7 +30,7 @@ class HomePageTest(TestCase):
         """Тест: переадресация после post-запроса"""
         response = self.client.post("/", data={"item_text": "some text"})
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response["location"], "/")
+        self.assertEqual(response["location"], "/lists/unique-list-in-world/")
 
 
 class ItemModelTest(TestCase):
@@ -66,3 +56,22 @@ class ItemModelTest(TestCase):
         second_saved_item = saved_items[1]
         self.assertEqual(first_saved_item.text, first_item_text)
         self.assertEqual(second_saved_item.text, second_item_text)
+
+
+class ListViewTest(TestCase):
+    """Тест представления списка"""
+
+    def test_uses_list_template(self):
+        """Тест: используется шаблон списка"""
+        response = self.client.get("/lists/unique-list-in-world/")
+        self.assertTemplateUsed(response, "list.html")
+
+    def test_displays_all_list_items(self):
+        """Тест: отображаются все элементы списка"""
+        new_item_texts = ("itemey 1", "itemey 2")
+        [Item.objects.create(text=item_text) for item_text in new_item_texts]
+
+        response = self.client.get("/lists/unique-list-in-world/")
+
+        for item_text in new_item_texts:
+            self.assertContains(response, item_text)
