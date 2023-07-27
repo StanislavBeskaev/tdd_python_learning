@@ -6,7 +6,7 @@ from selenium.common.exceptions import WebDriverException
 from selenium.webdriver import Keys
 from selenium.webdriver.common.by import By
 
-MAX_WAIT = 10
+MAX_WAIT = 2
 WAIT_TIMEOUT = 0.2
 
 
