@@ -59,6 +59,13 @@ class ListViewTest(TestCase):
         for item_text in other_list_item_texts:
             self.assertNotContains(response, item_text)
 
+    def test_passed_correct_list_to_template(self):
+        """Тест: в шаблон передаётся правильный список"""
+        _ = List.objects.create()
+        correct_list = List.objects.create()
+        response = self.client.get(f"/lists/{correct_list.id}/")
+        self.assertEqual(response.context["list"], correct_list)
+
 
 class NewItemTest(TestCase):
     """Тест нового элемента списка"""
