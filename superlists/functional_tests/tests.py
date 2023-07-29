@@ -5,6 +5,7 @@ from selenium import webdriver
 from selenium.common.exceptions import WebDriverException
 from selenium.webdriver import Keys
 from selenium.webdriver.common.by import By
+from selenium.webdriver.remote.webelement import WebElement
 
 MAX_WAIT = 2
 WAIT_TIMEOUT = 0.2
@@ -95,9 +96,26 @@ class NewVisitorTest(LiveServerTestCase):
 
         # Удовлетворённые, они оба ложатся спать
 
+    def test_layout_and_styling(self):
+        """Тест макета и стилевого оформления"""
+        # Эдит открывает домашнюю страницу
+        self.browser.get(self.live_server_url)
+        self.browser.set_window_size(1024, 768)
+
+        # Она замечает, что поле ввода аккуратно центрировано
+        inputbox = self.find_inputbox()
+        self.assertAlmostEquals(inputbox.location["x"] + inputbox.size["width"] / 2, 512, delta=10)
+
+        # Она начинает новый список и видит, что поле ввода там тоже аккуратно центрировано
+        inputbox.send_keys("testing")
+        inputbox.send_keys(Keys.ENTER)
+        self.wait_for_row_in_list_table("1: testing")
+        inputbox = self.find_inputbox()
+        self.assertAlmostEquals(inputbox.location["x"] + inputbox.size["width"] / 2, 512, delta=10)
+
     def add_new_element(self, text: str):
         """Добавить новый элемент в список"""
-        inputbox = self.browser.find_element(by=By.ID, value="id_new_item")
+        inputbox = self.find_inputbox()
         inputbox.send_keys(text)
         inputbox.send_keys(Keys.ENTER)
 
@@ -114,3 +132,7 @@ class NewVisitorTest(LiveServerTestCase):
                 if time.monotonic() - start_time > MAX_WAIT:
                     raise e
                 time.sleep(WAIT_TIMEOUT)
+
+    def find_inputbox(self) -> WebElement:
+        inputbox = self.browser.find_element(by=By.ID, value="id_new_item")
+        return inputbox
