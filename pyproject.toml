@@ -11,6 +11,8 @@ black = "^23.7.0"
 isort = "^5.12.0"
 flake8 = "^6.0.0"
 selenium = "^4.10.0"
+gunicorn = "^21.2.0"
+Fabric3 = "^1.14.post1"
 
 [tool.poetry.dev-dependencies]
 
