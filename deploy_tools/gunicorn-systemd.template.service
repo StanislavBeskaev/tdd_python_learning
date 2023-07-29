@@ -1,0 +1,11 @@
+[Unit]
+Description=Gunicorn server for SITENAME python TDD
+
+[Service]
+Restart=on-failure
+User=stas
+WorkingDirectory=/home/stas/sites/SITENAME/source/superlists
+ExecStart=/home/stas/sites/SITENAME/virtualenv/bin/gunicorn -b unix:/tmp/SITENAME.socket config.wsgi:application
+
+[Install]
+WantedBy=multi-user.target
