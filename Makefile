@@ -3,6 +3,7 @@ chk: check
 lint: check
 check: flake black_check isort_check
 
+cov: coverage
 
 fmt: format
 format: isort black
@@ -23,3 +24,7 @@ black_check:
 
 flake:
 	flake8 --config .flake8 superlists
+
+
+coverage:
+	cd superlists && coverage run manage.py test lists && coverage report -m && cd ..
