@@ -1,6 +1,5 @@
-from selenium.webdriver import Keys
-
 from functional_tests.base import FunctionalTest
+from selenium.webdriver import Keys
 
 
 class LayoutAndStylingTest(FunctionalTest):

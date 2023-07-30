@@ -1,5 +1,6 @@
 import os
 import time
+from typing import Callable
 
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium import webdriver
@@ -48,3 +49,15 @@ class FunctionalTest(StaticLiveServerTestCase):
         """Найти поле ввода элемента"""
         inputbox = self.browser.find_element(by=By.ID, value="id_new_item")
         return inputbox
+
+    @staticmethod
+    def wait_for(fn: Callable):
+        """Ожидать"""
+        start_time = time.monotonic()
+        while True:
+            try:
+                return fn()
+            except (AssertionError, WebDriverException) as e:
+                if time.monotonic() - start_time > MAX_WAIT:
+                    raise e
+                time.sleep(WAIT_TIMEOUT)
