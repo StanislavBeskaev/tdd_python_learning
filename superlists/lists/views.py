@@ -13,10 +13,17 @@ def home_page(request: HttpRequest) -> HttpResponse:
 def view_list(request: HttpRequest, list_id: int) -> HttpResponse:
     """Представление списка элементов"""
     list_ = List.objects.get(id=list_id)
+    error = None
+
     if request.method == "POST":
-        Item.objects.create(text=request.POST.get("item_text", ""), list=list_)
-        return redirect(f"/lists/{list_.id}/")
-    return render(request, "list.html", {"list": list_})
+        try:
+            item = Item.objects.create(text=request.POST.get("item_text", ""), list=list_)
+            item.full_clean()
+            return redirect(f"/lists/{list_.id}/")
+        except ValidationError:
+            error = "You can't have an empty list item"
+
+    return render(request, "list.html", {"list": list_, "error": error})
 
 
 def new_list(request: HttpRequest) -> HttpResponse:
