@@ -15,35 +15,29 @@ class ItemValidationTest(FunctionalTest):
         inputbox = self.find_inputbox()
         inputbox.send_keys(Keys.ENTER)
 
-        # Домашняя страница обновляется и появляется сообщение об ошибке,
-        # которое говорит, что элементы списка не должны быть пустыми
-        self.wait_for(
-            lambda: self.assertEqual(
-                self.browser.find_element(by=By.CSS_SELECTOR, value=".has-error").text,
-                "You can't have an empty list item",
-            )
-        )
+        # Браузер перехватывает запрос и не загружает страницу со списком
+        self.wait_for(lambda: self.browser.find_element(by=By.CSS_SELECTOR, value="#id_text:invalid"))
 
-        # Она пробует снова, теперь с неким текстом для элемента и теперь это срабатывает
+        # Эдит начинает набирать текст нового элемента и ошибка исчезает
         inputbox = self.find_inputbox()
-        inputbox.send_keys("Buy milk")
+        self.find_inputbox().send_keys("Buy milk")
+        self.wait_for(lambda: self.browser.find_element(by=By.CSS_SELECTOR, value="#id_text:valid"))
+
+        # Она может отправить его успешно
         inputbox.send_keys(Keys.ENTER)
         self.wait_for_row_in_list_table("1: Buy milk")
 
         # Как ни странно, Эдит решает отправить второй пустой элемент списка
         self.find_inputbox().send_keys(Keys.ENTER)
 
-        # Она получает аналогичное предупреждение на странице списка
-        self.wait_for(
-            lambda: self.assertEqual(
-                self.browser.find_element(by=By.CSS_SELECTOR, value=".has-error").text,
-                "You can't have an empty list item",
-            )
-        )
+        # И снова браузер не подчинится
+        self.wait_for_row_in_list_table("1: Buy milk")
+        self.wait_for(lambda: self.browser.find_element(by=By.CSS_SELECTOR, value="#id_text:invalid"))
 
-        # И она может его исправить, заполнив поле неким текстом
+        # И она может исправиться, заполнив поле текстом
         inputbox = self.find_inputbox()
         inputbox.send_keys("Make tea")
+        self.wait_for(lambda: self.browser.find_element(by=By.CSS_SELECTOR, value="#id_text:valid"))
         inputbox.send_keys(Keys.ENTER)
         self.wait_for_row_in_list_table("1: Buy milk")
         self.wait_for_row_in_list_table("2: Make tea")
