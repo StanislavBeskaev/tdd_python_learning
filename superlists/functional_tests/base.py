@@ -47,7 +47,7 @@ class FunctionalTest(StaticLiveServerTestCase):
 
     def find_inputbox(self) -> WebElement:
         """Найти поле ввода элемента"""
-        inputbox = self.browser.find_element(by=By.ID, value="id_new_item")
+        inputbox = self.browser.find_element(by=By.ID, value="id_text")
         return inputbox
 
     @staticmethod

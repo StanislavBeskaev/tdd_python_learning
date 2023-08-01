@@ -20,7 +20,7 @@ class NewVisitorTest(FunctionalTest):
         self.assertIn("To-Do", header_text)
 
         # Ей сразу же предлагается ввести элемент списка
-        inputbox = self.browser.find_element(by=By.ID, value="id_new_item")
+        inputbox = self.find_inputbox()
         self.assertEqual(inputbox.get_attribute("placeholder"), "Enter a to-do item")
 
         # Она набирает в текстовом поле "Купить павлиньи перья" (ее хобби - вязание рыболовных мушек)

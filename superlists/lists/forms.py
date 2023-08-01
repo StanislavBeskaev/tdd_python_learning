@@ -17,4 +17,3 @@ class ItemForm(forms.ModelForm):
         error_messages = {
             "text": {"required": EMPTY_ITEM_ERROR}
         }
-
