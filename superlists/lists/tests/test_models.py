@@ -49,3 +49,33 @@ class ListAndItemModelsTest(TestCase):
         """Тест получения абсолютного url"""
         list_ = List.objects.create()
         self.assertEqual(list_.get_absolute_url(), f"/lists/{list_.id}/")
+
+    def test_duplicate_items_are_invalid(self):
+        """Тест: повторы элементов в одном списке недопустимы"""
+        list_ = List.objects.create()
+        Item.objects.create(list=list_, text="one")
+        with self.assertRaises(ValidationError):
+            item = Item(list=list_, text="one")
+            item.full_clean()
+
+    def test_CAN_save_same_items_to_different_lists(self):
+        """Тест: можно сохранить одинаковые элементы в разные списки"""
+        list_1 = List.objects.create()
+        list_2 = List.objects.create()
+        Item.objects.create(list=list_1, text="one")
+        item = Item(list=list_2, text="one")
+        item.full_clean()  # не должен поднять исключение
+
+    def test_list_ordering(self):
+        """Тест упорядочения списка"""
+        list_1 = List.objects.create()
+        item_1 = Item.objects.create(list=list_1, text="i1")
+        item_2 = Item.objects.create(list=list_1, text="item 2")
+        item_3 = Item.objects.create(list=list_1, text="3")
+
+        self.assertEqual(list(Item.objects.all()), [item_1, item_2, item_3])
+
+    def test_string_representation(self):
+        """Тест строкового представления"""
+        item = Item(text="some text")
+        self.assertEqual(str(item), "some text")
