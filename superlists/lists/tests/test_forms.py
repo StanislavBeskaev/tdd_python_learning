@@ -1,7 +1,6 @@
 from django.test import TestCase
-
-from lists.forms import ItemForm, EMPTY_ITEM_ERROR
-from lists.models import List, Item
+from lists.forms import EMPTY_ITEM_ERROR, ItemForm
+from lists.models import Item, List
 
 
 class ItemFormTest(TestCase):
@@ -17,10 +16,7 @@ class ItemFormTest(TestCase):
         """Тест валидации формы для пустых элементов"""
         form = ItemForm(data={"text": ""})
         self.assertFalse(form.is_valid())
-        self.assertEqual(
-            form.errors["text"],
-            [EMPTY_ITEM_ERROR]
-        )
+        self.assertEqual(form.errors["text"], [EMPTY_ITEM_ERROR])
 
     def test_form_save_handles_saving_to_a_list(self):
         """Тест метод save формы обрабатывает сохранение в список"""

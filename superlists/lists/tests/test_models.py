@@ -3,39 +3,30 @@ from django.test import TestCase
 from lists.models import Item, List
 
 
+class ItemModelTest(TestCase):
+    """ "Тесты модели элемента"""
+
+    def test_default_text(self):
+        """Тест заданного по умолчанию текста"""
+        item = Item()
+        self.assertEqual(item.text, "")
+
+    def test_string_representation(self):
+        """Тест строкового представления"""
+        item = Item(text="some text")
+        self.assertEqual(str(item), "some text")
+
+
 class ListAndItemModelsTest(TestCase):
     """Тест модели элемента списка"""
 
-    def test_saving_and_retrieving_item(self):
-        """Тест сохранения и получения элементов списка"""
-        list_ = List()
-        list_.save()
-
-        first_item_text = "The first (ever) list item"
-        second_item_text = "Item the second"
-
-        first_item = Item()
-        first_item.text = first_item_text
-        first_item.list = list_
-        first_item.save()
-
-        second_item = Item()
-        second_item.text = second_item_text
-        second_item.list = list_
-        second_item.save()
-
-        saved_list = List.objects.first()
-        self.assertEqual(saved_list, list_)
-
-        saved_items = Item.objects.all()
-        self.assertEqual(saved_items.count(), 2)
-
-        first_saved_item = saved_items[0]
-        second_saved_item = saved_items[1]
-        self.assertEqual(first_saved_item.text, first_item_text)
-        self.assertEqual(first_saved_item.list, list_)
-        self.assertEqual(second_saved_item.text, second_item_text)
-        self.assertEqual(second_saved_item.list, list_)
+    def test_item_is_related_to_list(self):
+        """Тест: элемент связан со списком"""
+        list_ = List.objects.create()
+        item = Item()
+        item.list = list_
+        item.save()
+        self.assertIn(item, list_.item_set.all())
 
     def test_cannot_save_empty_list_item(self):
         """Тест: нельзя добавлять пустые элементы списка"""
@@ -74,8 +65,3 @@ class ListAndItemModelsTest(TestCase):
         item_3 = Item.objects.create(list=list_1, text="3")
 
         self.assertEqual(list(Item.objects.all()), [item_1, item_2, item_3])
-
-    def test_string_representation(self):
-        """Тест строкового представления"""
-        item = Item(text="some text")
-        self.assertEqual(str(item), "some text")

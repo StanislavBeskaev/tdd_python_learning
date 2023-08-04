@@ -1,7 +1,6 @@
+from functional_tests.base import FunctionalTest
 from selenium.webdriver import Keys
 from selenium.webdriver.common.by import By
-
-from functional_tests.base import FunctionalTest
 
 
 class ItemValidationTest(FunctionalTest):
@@ -60,6 +59,6 @@ class ItemValidationTest(FunctionalTest):
         self.wait_for(
             lambda: self.assertEqual(
                 self.browser.find_element(by=By.CSS_SELECTOR, value=".has-error").text,
-                "You've already got this in your list"
+                "You've already got this in your list",
             )
         )

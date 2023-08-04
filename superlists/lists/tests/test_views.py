@@ -1,7 +1,6 @@
 from django.test import TestCase
 from django.utils.html import escape
-
-from lists.forms import ItemForm, EMPTY_ITEM_ERROR
+from lists.forms import EMPTY_ITEM_ERROR, ItemForm
 from lists.models import Item, List
 
 HOME_TEMPLATE = "home.html"
@@ -118,9 +117,7 @@ class ListViewTest(TestCase):
         _ = List.objects.create()
         correct_list = List.objects.create()
 
-        response = self.client.post(
-            f"/lists/{correct_list.id}/", data={"text": "A new item for an existing list"}
-        )
+        response = self.client.post(f"/lists/{correct_list.id}/", data={"text": "A new item for an existing list"})
 
         self.assertRedirects(response, f"/lists/{correct_list.id}/")
 
