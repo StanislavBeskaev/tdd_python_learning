@@ -10,7 +10,7 @@ VIRTUAL_ENV_PREFIX = "../../virtualenv/bin/"
 
 def deploy():
     site_folder = '/home/%s/sites/%s' % (env.user, env.host)
-    source_folder = site_folder + '/source/superlists'
+    source_folder = site_folder + '/source'
     _create_directory_structure_if_necessary(site_folder)
     _get_latest_source(source_folder)
     _update_settings(source_folder, env.host)
@@ -34,14 +34,14 @@ def _get_latest_source(source_folder):
 
 
 def _update_settings(source_folder, site_name):
-    settings_path = source_folder + '/config/settings.py'
+    settings_path = source_folder + '/superlists/config/settings.py'
     sed(settings_path, "DEBUG = True", "DEBUG = False")
     sed(
         settings_path,
         'ALLOWED_HOSTS =.+$',
         'ALLOWED_HOSTS = ["%s"]' % (site_name,)
     )
-    secret_key_file = source_folder + '/config/secret_key.py'
+    secret_key_file = source_folder + '/superlists/config/secret_key.py'
     if not exists(secret_key_file):
         chars = 'abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)'
         key = ''.join(random.SystemRandom().choice(chars) for _ in range(50))
@@ -50,7 +50,7 @@ def _update_settings(source_folder, site_name):
 
 
 def _update_virtualenv(source_folder):
-    virtualenv_folder = source_folder + '../../virtualenv'
+    virtualenv_folder = source_folder + '../virtualenv'
     if not exists(virtualenv_folder + '/bin/pip'):
         run('python3.8 -m venv %s' % (virtualenv_folder,))
     run('%s/bin/pip install -r %s/requirements.txt' % (
@@ -59,12 +59,12 @@ def _update_virtualenv(source_folder):
 
 
 def _update_static_files(source_folder):
-    run(f'cd %s && {VIRTUAL_ENV_PREFIX}python manage.py collectstatic --noinput' % (
+    run(f'cd %s/superlists && {VIRTUAL_ENV_PREFIX}python manage.py collectstatic --noinput' % (
         source_folder,
     ))
 
 
 def _update_database(source_folder):
-    run(f'cd %s && {VIRTUAL_ENV_PREFIX}python manage.py migrate --noinput' % (
+    run(f'cd %s/superlists && {VIRTUAL_ENV_PREFIX}python manage.py migrate --noinput' % (
         source_folder,
     ))
