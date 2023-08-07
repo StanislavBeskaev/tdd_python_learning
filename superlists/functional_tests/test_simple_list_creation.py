@@ -1,5 +1,4 @@
 from functional_tests.base import FunctionalTest
-from selenium import webdriver
 from selenium.webdriver import Keys
 from selenium.webdriver.common.by import By
 
@@ -58,7 +57,7 @@ class NewVisitorTest(FunctionalTest):
         # Используем новый сеанс браузера, тем самым обеспечивая, что бы никакая
         # информация от Эдит не прошла через cookie и пр.
         self.browser.quit()
-        self.browser = webdriver.Firefox()
+        self.init_browser()
 
         # Фрэнсис посещают домашнюю страницу. Нет никаких признаков списка Эдит
         self.browser.get(self.live_server_url)
