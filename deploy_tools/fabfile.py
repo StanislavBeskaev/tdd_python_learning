@@ -2,7 +2,6 @@ from fabric.contrib.files import append, exists, sed
 from fabric.api import env, local, run
 import random
 
-# TODO проверить работу на сервер
 # TODO команды для правки конфигов nginx и systemd
 REPO_URL = 'https://github.com/StanislavBeskaev/tdd_python_learning'
 VIRTUAL_ENV_PREFIX = "../../virtualenv/bin/"
