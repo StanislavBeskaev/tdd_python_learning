@@ -2,7 +2,6 @@ from fabric.contrib.files import append, exists, sed
 from fabric.api import env, local, run
 import random
 
-
 # TODO проверить работу на сервер
 # TODO команды для правки конфигов nginx и systemd
 REPO_URL = 'https://github.com/StanislavBeskaev/tdd_python_learning'
@@ -11,7 +10,7 @@ VIRTUAL_ENV_PREFIX = "../../virtualenv/bin/"
 
 def deploy():
     site_folder = '/home/%s/sites/%s' % (env.user, env.host)
-    source_folder = site_folder + '/source'
+    source_folder = site_folder + '/source/superlists'
     _create_directory_structure_if_necessary(site_folder)
     _get_latest_source(source_folder)
     _update_settings(source_folder, env.host)
@@ -37,7 +36,8 @@ def _get_latest_source(source_folder):
 def _update_settings(source_folder, site_name):
     settings_path = source_folder + '/config/settings.py'
     sed(settings_path, "DEBUG = True", "DEBUG = False")
-    sed(settings_path,
+    sed(
+        settings_path,
         'ALLOWED_HOSTS =.+$',
         'ALLOWED_HOSTS = ["%s"]' % (site_name,)
     )
