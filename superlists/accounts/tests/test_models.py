@@ -1,6 +1,8 @@
 from django.test import TestCase
 from django.contrib.auth import get_user_model
 
+from accounts.models import Token
+
 User = get_user_model()
 
 
@@ -16,3 +18,13 @@ class UserModelTest(TestCase):
         """Тест: адрес электронной почты является первичным ключом"""
         user = User(email='a@b.com')
         self.assertEqual(user.pk, 'a@b.com')
+
+
+class TokenModelTest(TestCase):
+    """Тесты модели маркера"""
+
+    def test_links_user_with_auto_generated_uid(self):
+        """Тест: соединяет пользователя с автогенерированным uid"""
+        token_1 = Token.objects.create(email='a@b.com')
+        token_2 = Token.objects.create(email='a@b.com')
+        self.assertNotEqual(token_1.uid, token_2.uid)
