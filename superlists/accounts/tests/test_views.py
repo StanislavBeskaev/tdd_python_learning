@@ -1,4 +1,4 @@
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch, MagicMock, call
 
 from django.test import TestCase
 
@@ -55,10 +55,32 @@ class SendLoginEmailViewTest(TestCase):
         self.assertIn(expected_url, kwargs["message"])
 
 
+@patch("accounts.views.auth")
 class LoginViewTest(TestCase):
     """Тесты представления входа в систему"""
 
-    def test_redirects_to_home_page(self):
+    def test_redirects_to_home_page(self, mock_auth: MagicMock):
         """Тест: переадресуется на домашнюю страницу"""
         response = self.client.get("/accounts/login?token=abcd123")
         self.assertRedirects(response, "/")
+
+    def test_calls_authenticate_with_uid_from_get_request(self, mock_auth: MagicMock):
+        """Тест: вызывается authenticate с uid из GET-запроса"""
+        uid = "abcd123"
+        self.client.get(f"/accounts/login?token={uid}")
+        self.assertEqual(mock_auth.authenticate.call_args, call(uid=uid))
+
+    def test_calls_auth_with_user_if_there_is_one(self, mock_auth: MagicMock):
+        """Тест: вызывает auth_login с пользователем, если такой имеется"""
+        uid = "abcd123"
+        response = self.client.get(f"/accounts/login?token={uid}")
+        self.assertEqual(
+            mock_auth.login.call_args,
+            call(response.wsgi_request, mock_auth.authenticate.return_value)
+        )
+
+    def test_does_not_login_if_user_is_not_authenticated(self, mock_auth: MagicMock):
+        """Тест: не регистрируется в системе, если пользователь не аутентифицирован"""
+        mock_auth.authenticate.return_value = None
+        self.client.get(f"/accounts/login?token=abcd123")
+        self.assertFalse(mock_auth.login.called)

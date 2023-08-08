@@ -1,4 +1,4 @@
-from django.contrib import messages
+from django.contrib import messages, auth
 from django.core.mail import send_mail
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect
@@ -28,4 +28,7 @@ def send_login_email(request: HttpRequest) -> HttpResponse:
 
 def login(request: HttpRequest) -> HttpResponse:
     """Регистрация в системе"""
+    user = auth.authenticate(uid=request.GET.get("token"))
+    if user:
+        auth.login(request, user)
     return redirect("/")
