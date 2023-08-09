@@ -1,5 +1,6 @@
 from accounts.models import Token
 from django.contrib import auth, messages
+from django.contrib.auth import logout as auth_logout
 from django.core.mail import send_mail
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect
@@ -27,4 +28,10 @@ def login(request: HttpRequest) -> HttpResponse:
     user = auth.authenticate(uid=request.GET.get("token"))
     if user:
         auth.login(request, user)
+    return redirect("/")
+
+
+def logout(request: HttpRequest) -> HttpResponse:
+    """Выход из системы"""
+    auth_logout(request)
     return redirect("/")

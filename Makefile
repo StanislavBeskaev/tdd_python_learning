@@ -10,6 +10,7 @@ format: isort black
 
 tst_m: test_m
 tst_f: test_f
+tst_a: test_a
 
 isort:
 	isort superlists
@@ -33,7 +34,10 @@ coverage:
 	cd superlists && coverage run manage.py test lists && coverage report -m && cd ..
 
 test_m:
-	cd superlists && python manage.py test lists accounts
+	cd superlists && python manage.py test lists accounts && cd ..
 
 test_f:
-	cd superlists && python manage.py test functional_tests
+	cd superlists && python manage.py test functional_tests && cd ..
+
+test_a:
+	cd superlists && python manage.py test && cd ..
