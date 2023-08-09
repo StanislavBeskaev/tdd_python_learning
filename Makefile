@@ -8,6 +8,9 @@ cov: coverage
 fmt: format
 format: isort black
 
+tst_m: test_m
+tst_f: test_f
+
 isort:
 	isort superlists
 
@@ -28,3 +31,9 @@ flake:
 
 coverage:
 	cd superlists && coverage run manage.py test lists && coverage report -m && cd ..
+
+test_m:
+	cd superlists && python manage.py test lists accounts
+
+test_f:
+	cd superlists && python manage.py test functional_tests
