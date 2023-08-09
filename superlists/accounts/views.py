@@ -1,10 +1,9 @@
-from django.contrib import messages, auth
+from accounts.models import Token
+from django.contrib import auth, messages
 from django.core.mail import send_mail
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect
 from django.urls import reverse
-
-from accounts.models import Token
 
 
 def send_login_email(request: HttpRequest) -> HttpResponse:
@@ -17,12 +16,9 @@ def send_login_email(request: HttpRequest) -> HttpResponse:
         subject="Your login link for Superlists",
         message=message_body,
         from_email="noreply@superlists",
-        recipient_list=[email]
+        recipient_list=[email],
     )
-    messages.success(
-        request,
-        "Check your email, you'll find a message with a link that will log you into the site."
-    )
+    messages.success(request, "Check your email, you'll find a message with a link that will log you into the site.")
     return redirect("/")
 
 

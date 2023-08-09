@@ -1,6 +1,5 @@
+from accounts.models import Token, User
 from django.http import HttpRequest
-
-from accounts.models import User, Token
 
 
 class PasswordLessAuthenticationBackend:

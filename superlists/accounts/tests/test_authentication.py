@@ -1,9 +1,8 @@
-from django.http import HttpRequest
-from django.test import TestCase
-from django.contrib.auth import get_user_model
-
 from accounts.authentication import PasswordLessAuthenticationBackend
 from accounts.models import Token
+from django.contrib.auth import get_user_model
+from django.http import HttpRequest
+from django.test import TestCase
 
 User = get_user_model()
 
@@ -29,7 +28,7 @@ class AuthenticationTest(TestCase):
         email = "edith@example.com"
         existing_user = User.objects.create(email=email)
         token = Token.objects.create(email=email)
-        user = PasswordLessAuthenticationBackend().authenticate(HttpRequest(),token.uid)
+        user = PasswordLessAuthenticationBackend().authenticate(HttpRequest(), token.uid)
         self.assertEqual(user, existing_user)
 
 

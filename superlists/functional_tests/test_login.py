@@ -1,11 +1,9 @@
 import re
 
 from django.core import mail
+from functional_tests.base import FunctionalTest
 from selenium.webdriver import Keys
 from selenium.webdriver.common.by import By
-
-from functional_tests.base import FunctionalTest
-
 
 TEST_EMAIL = "edith@example.com"
 SUBJECT = "Your login link for Superlists"
@@ -46,8 +44,6 @@ class LoginTest(FunctionalTest):
         self.browser.get(url)
 
         # Она зарегистрирована в системе
-        self.wait_for(
-            lambda: self.browser.find_element(by=By.LINK_TEXT, value="Log out")
-        )
+        self.wait_for(lambda: self.browser.find_element(by=By.LINK_TEXT, value="Log out"))
         navbar = self.browser.find_element(by=By.CSS_SELECTOR, value=".navbar")
         self.assertIn(TEST_EMAIL, navbar.text)

@@ -1,8 +1,7 @@
-from unittest.mock import patch, MagicMock, call
-
-from django.test import TestCase
+from unittest.mock import MagicMock, call, patch
 
 from accounts.models import Token
+from django.test import TestCase
 
 
 class SendLoginEmailViewTest(TestCase):
@@ -32,8 +31,7 @@ class SendLoginEmailViewTest(TestCase):
 
         message = list(response.context["messages"])[0]
         self.assertEqual(
-            message.message,
-            "Check your email, you'll find a message with a link that will log you into the site."
+            message.message, "Check your email, you'll find a message with a link that will log you into the site."
         )
         self.assertEqual(message.tags, "success")
 
@@ -74,10 +72,7 @@ class LoginViewTest(TestCase):
         """Тест: вызывает auth_login с пользователем, если такой имеется"""
         uid = "abcd123"
         response = self.client.get(f"/accounts/login?token={uid}")
-        self.assertEqual(
-            mock_auth.login.call_args,
-            call(response.wsgi_request, mock_auth.authenticate.return_value)
-        )
+        self.assertEqual(mock_auth.login.call_args, call(response.wsgi_request, mock_auth.authenticate.return_value))
 
     def test_does_not_login_if_user_is_not_authenticated(self, mock_auth: MagicMock):
         """Тест: не регистрируется в системе, если пользователь не аутентифицирован"""

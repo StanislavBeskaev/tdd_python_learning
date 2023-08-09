@@ -5,6 +5,7 @@ from django.db import models
 
 class User(models.Model):
     """Пользователь"""
+
     email = models.EmailField(primary_key=True)
     REQUIRED_FIELDS = []
     USERNAME_FIELD = 'email'
@@ -14,5 +15,6 @@ class User(models.Model):
 
 class Token(models.Model):
     """Маркер для связи почты и уникального идентификатора"""
+
     email = models.EmailField()
     uid = models.CharField(default=uuid.uuid4, max_length=40)
