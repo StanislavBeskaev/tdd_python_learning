@@ -58,28 +58,15 @@ LOGGING = {
     'formatters': {
         'default': {
             'format': '[%(asctime)s] - %(levelname)s - %(process)d: %(message)s',
-            'datefmt': '%d.%m.%Y %H:%M:%S'
+            'datefmt': '%d.%m.%Y %H:%M:%S',
         }
     },
-    "handlers": {
-        "console": {
-            "level": "DEBUG",
-            "class": "logging.StreamHandler",
-            'formatter': 'default'
-        }
-    },
+    "handlers": {"console": {"level": "DEBUG", "class": "logging.StreamHandler", 'formatter': 'default'}},
     "loggers": {
-        "django": {
-            "handlers": ["console"],
-            "level": "INFO"
-        },
-        "accounts": {
-            "handlers": ["console"],
-            "level": "INFO",
-            "propagate": False
-        }
+        "django": {"handlers": ["console"], "level": "INFO"},
+        "accounts": {"handlers": ["console"], "level": "INFO", "propagate": False},
     },
-    "root": {"level": "INFO"}
+    "root": {"level": "INFO"},
 }
 
 ROOT_URLCONF = 'config.urls'

@@ -77,5 +77,5 @@ class LoginViewTest(TestCase):
     def test_does_not_login_if_user_is_not_authenticated(self, mock_auth: MagicMock):
         """Тест: не регистрируется в системе, если пользователь не аутентифицирован"""
         mock_auth.authenticate.return_value = None
-        self.client.get(f"/accounts/login?token=abcd123")
+        self.client.get("/accounts/login?token=abcd123")
         self.assertFalse(mock_auth.login.called)

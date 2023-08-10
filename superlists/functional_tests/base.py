@@ -3,13 +3,12 @@ import time
 from typing import Callable
 
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
+from functional_tests.server_tools import reset_database
 from selenium import webdriver
 from selenium.common.exceptions import WebDriverException
 from selenium.webdriver import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
-
-from functional_tests.server_tools import reset_database
 
 MAX_WAIT = 2
 WAIT_TIMEOUT = 0.2
