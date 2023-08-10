@@ -1,7 +1,8 @@
 from django.conf import settings
-from django.contrib.auth import BACKEND_SESSION_KEY, SESSION_KEY, get_user_model
-from django.contrib.sessions.backends.db import SessionStore
+from django.contrib.auth import get_user_model
 from functional_tests.base import FunctionalTest
+from functional_tests.server_tools import create_session_on_server
+from functional_tests.management.commands.create_session import create_pre_authentication_session
 
 
 User = get_user_model()
@@ -9,13 +10,13 @@ User = get_user_model()
 
 class MyListTest(FunctionalTest):
     """Тест приложения 'Мои списки'"""
+
     def create_pre_authentication_session(self, email: str) -> None:
         """Создать предварительно аутентифицированный сеанс"""
-        user = User.objects.create(email=email)
-        session = SessionStore()
-        session[SESSION_KEY] = user.pk
-        session[BACKEND_SESSION_KEY] = settings.AUTHENTICATION_BACKENDS[0]
-        session.save()
+        if self.staging_server:
+            session_key = create_session_on_server(self.staging_server, email)
+        else:
+            session_key = create_pre_authentication_session(email=email)
 
         # Установить cookie, которые нужны для первого посещения домена.
         # Страницы 404 загружаются быстрее всего
@@ -23,7 +24,7 @@ class MyListTest(FunctionalTest):
         self.browser.add_cookie(
             dict(
                 name=settings.SESSION_COOKIE_NAME,
-                value=session.session_key,
+                value=session_key,
                 path="/"
             )
         )

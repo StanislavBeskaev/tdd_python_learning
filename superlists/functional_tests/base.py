@@ -9,6 +9,8 @@ from selenium.webdriver import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 
+from functional_tests.server_tools import reset_database
+
 MAX_WAIT = 2
 WAIT_TIMEOUT = 0.2
 
@@ -32,9 +34,10 @@ class FunctionalTest(StaticLiveServerTestCase):
 
     def setUp(self) -> None:
         self.init_browser()
-        staging_server = os.environ.get("STAGING_SERVER")
-        if staging_server:
-            self.live_server_url = f"http://{staging_server}"
+        self.staging_server = os.environ.get("STAGING_SERVER")
+        if self.staging_server:
+            self.live_server_url = f"http://{self.staging_server}"
+            reset_database(self.staging_server)
 
     def init_browser(self):
         self.browser = webdriver.Chrome()
