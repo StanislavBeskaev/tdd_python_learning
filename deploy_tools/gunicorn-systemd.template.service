@@ -1,11 +1,18 @@
 [Unit]
-Description=Gunicorn server for SITENAME python TDD
+Description=Gunicorn server for stanislavbeskaev.ru python TDD
 
 [Service]
 Restart=on-failure
 User=stas
-WorkingDirectory=/home/stas/sites/SITENAME/source/superlists
-ExecStart=/home/stas/sites/SITENAME/virtualenv/bin/gunicorn -b unix:/tmp/SITENAME.socket config.wsgi:application
+Environment=EMAIL_USER=yourgmailuser
+Environment=EMAIL_PASSWORD=yourgmailpassword
+WorkingDirectory=/home/stas/sites/stanislavbeskaev.ru/source/superlists
+ExecStart=/home/stas/sites/stanislavbeskaev.ru/virtualenv/bin/gunicorn \
+-b unix:/tmp/stanislavbeskaev.ru.socket \
+--capture-output \
+--access-logfile ../access.log \
+--error-logfile  ../error.log \
+config.wsgi:application
 
 [Install]
 WantedBy=multi-user.target
