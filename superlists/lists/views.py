@@ -32,3 +32,8 @@ def new_list(request: HttpRequest) -> HttpResponse:
         return redirect(list_)
     else:
         return render(request, "home.html", {"form": form})
+
+
+def my_lists(request: HttpRequest, email: str) -> HttpResponse:
+    """Представление моих списков"""
+    return render(request, "my_lists.html")

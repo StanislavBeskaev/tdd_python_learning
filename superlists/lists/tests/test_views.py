@@ -167,3 +167,12 @@ class ListViewTest(TestCase):
         self.assertContains(response, expected_error)
         self.assertTemplateUsed(response, "list.html")
         self.assertEqual(Item.objects.count(), 1)
+
+
+class MyListsTest(TestCase):
+    """Тесты страницы 'Мои списки'"""
+
+    def test_my_lists_url_renders_my_lists_template(self):
+        """Используется корректный шаблон"""
+        response = self.client.get("/lists/users/a@b.com/")
+        self.assertTemplateUsed(response, "my_lists.html")

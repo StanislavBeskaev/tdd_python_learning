@@ -50,6 +50,15 @@ class FunctionalTest(StaticLiveServerTestCase):
         inputbox.send_keys(text)
         inputbox.send_keys(Keys.ENTER)
 
+    def add_list_item(self, item_text: str):
+        """Добавить элемент списка"""
+        num_rows = len(self.browser.find_elements(by=By.CSS_SELECTOR, value="#id_list_table tr"))
+        inputbox = self.find_inputbox()
+        inputbox.send_keys(item_text)
+        inputbox.send_keys(Keys.ENTER)
+        item_number = num_rows + 1
+        self.wait_for_row_in_list_table(f"{item_number}: {item_text}")
+
     @wait
     def wait_for_row_in_list_table(self, row_text: str):
         """Ожидать строку в таблице списка"""

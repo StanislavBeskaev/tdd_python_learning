@@ -50,10 +50,7 @@ class ItemValidationTest(FunctionalTest):
         """Тест: нельзя добавлять повторяющиеся элементы"""
         # Эдит открывает домашнюю страницу и начинает новый список
         self.browser.get(self.live_server_url)
-        inputbox = self.find_inputbox()
-        inputbox.send_keys("Buy wellies")
-        inputbox.send_keys(Keys.ENTER)
-        self.wait_for_row_in_list_table("1: Buy wellies")
+        self.add_list_item("Buy wellies")
 
         # Она случайно пытается ввести повторяющейся элемент
         inputbox = self.find_inputbox()
@@ -72,10 +69,7 @@ class ItemValidationTest(FunctionalTest):
         """Тест: сообщения об ошибках очищаются при вводе"""
         # Эдит начинает список и вызывает ошибку валидации:
         self.browser.get(self.live_server_url)
-        inputbox = self.find_inputbox()
-        inputbox.send_keys("Banter too thick")
-        inputbox.send_keys(Keys.ENTER)
-        self.wait_for_row_in_list_table("1: Banter too thick")
+        self.add_list_item("Banter too thick")
 
         inputbox = self.find_inputbox()
         inputbox.send_keys("Banter too thick")
