@@ -44,4 +44,7 @@ def new_list(request: HttpRequest) -> HttpResponse:
 def my_lists(request: HttpRequest, email: str) -> HttpResponse:
     """Представление моих списков"""
     owner = User.objects.get(email=email)
+    print("my_lists")
+    print(owner)
+    print(owner.list_set.all())
     return render(request=request, template_name="my_lists.html", context={"owner": owner})
