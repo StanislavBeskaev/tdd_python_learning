@@ -1,6 +1,10 @@
+from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.test import TestCase
 from lists.models import Item, List
+
+
+User = get_user_model()
 
 
 class ItemModelTest(TestCase):
@@ -36,11 +40,6 @@ class ListAndItemModelsTest(TestCase):
             item.save()
             item.full_clean()
 
-    def test_get_absolute_url(self):
-        """Тест получения абсолютного url"""
-        list_ = List.objects.create()
-        self.assertEqual(list_.get_absolute_url(), f"/lists/{list_.id}/")
-
     def test_duplicate_items_are_invalid(self):
         """Тест: повторы элементов в одном списке недопустимы"""
         list_ = List.objects.create()
@@ -65,3 +64,22 @@ class ListAndItemModelsTest(TestCase):
         item_3 = Item.objects.create(list=list_1, text="3")
 
         self.assertEqual(list(Item.objects.all()), [item_1, item_2, item_3])
+
+
+class ListModelTest(TestCase):
+    """Тесты модели списка"""
+
+    def test_get_absolute_url(self):
+        """Тест получения абсолютного url"""
+        list_ = List.objects.create()
+        self.assertEqual(list_.get_absolute_url(), f"/lists/{list_.id}/")
+
+    def test_lists_can_have_owners(self):
+        """Тест: списки могут иметь владельца"""
+        user = User.objects.create(email="a@b.com")
+        list_ = List.objects.create(owner=user)
+        self.assertIn(list_, user.list_set.all())
+
+    def test_list_owner_is_optional(self):
+        """Тест: владелец списка является необязательным"""
+        List.objects.create()  # Не должно поднимать исключение
