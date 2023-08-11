@@ -3,7 +3,6 @@ from django.core.exceptions import ValidationError
 from django.test import TestCase
 from lists.models import Item, List
 
-
 User = get_user_model()
 
 
@@ -13,16 +12,7 @@ class ItemModelTest(TestCase):
     def test_default_text(self):
         """Тест заданного по умолчанию текста"""
         item = Item()
-        self.assertEqual(item.text, "")
-
-    def test_string_representation(self):
-        """Тест строкового представления"""
-        item = Item(text="some text")
-        self.assertEqual(str(item), "some text")
-
-
-class ListAndItemModelsTest(TestCase):
-    """Тест модели элемента списка"""
+        self.assertEqual(item.text, '')
 
     def test_item_is_related_to_list(self):
         """Тест: элемент связан со списком"""
@@ -32,7 +22,7 @@ class ListAndItemModelsTest(TestCase):
         item.save()
         self.assertIn(item, list_.item_set.all())
 
-    def test_cannot_save_empty_list_item(self):
+    def test_cannot_save_empty_list_items(self):
         """Тест: нельзя добавлять пустые элементы списка"""
         list_ = List.objects.create()
         item = Item(text="", list=list_)
@@ -58,12 +48,19 @@ class ListAndItemModelsTest(TestCase):
 
     def test_list_ordering(self):
         """Тест упорядочения списка"""
-        list_1 = List.objects.create()
-        item_1 = Item.objects.create(list=list_1, text="i1")
-        item_2 = Item.objects.create(list=list_1, text="item 2")
-        item_3 = Item.objects.create(list=list_1, text="3")
+        list1 = List.objects.create()
+        item1 = Item.objects.create(list=list1, text='i1')
+        item2 = Item.objects.create(list=list1, text='item 2')
+        item3 = Item.objects.create(list=list1, text='3')
+        self.assertEqual(
+            list(Item.objects.all()),
+            [item1, item2, item3]
+        )
 
-        self.assertEqual(list(Item.objects.all()), [item_1, item_2, item_3])
+    def test_string_representation(self):
+        """Тест: строкового представления"""
+        item = Item(text='some text')
+        self.assertEqual(str(item), 'some text')
 
 
 class ListModelTest(TestCase):
@@ -72,7 +69,7 @@ class ListModelTest(TestCase):
     def test_get_absolute_url(self):
         """Тест получения абсолютного url"""
         list_ = List.objects.create()
-        self.assertEqual(list_.get_absolute_url(), f"/lists/{list_.id}/")
+        self.assertEqual(list_.get_absolute_url(), f'/lists/{list_.id}/')
 
     def test_lists_can_have_owners(self):
         """Тест: списки могут иметь владельца"""
@@ -87,6 +84,27 @@ class ListModelTest(TestCase):
     def test_list_name_is_first_item_text(self):
         """Тест: имя списка является текстом первого элемента"""
         list_ = List.objects.create()
-        Item.objects.create(list=list_, text="first item")
-        Item.objects.create(list=list_, text="second item")
-        self.assertEqual(list_.name, "first item")
+        Item.objects.create(list=list_, text='first item')
+        Item.objects.create(list=list_, text='second item')
+        self.assertEqual(list_.name, 'first item')
+
+    def test_create_new_creates_list_and_first_item(self):
+        """Тест: создание нового списка"""
+        List.create_new(first_item_text='new item text')
+        new_item = Item.objects.first()
+        self.assertEqual(new_item.text, 'new item text')
+        new_list = List.objects.first()
+        self.assertEqual(new_item.list, new_list)
+
+    def test_create_new_optionally_saves_owner(self):
+        """Тест: создание списка со владельцем"""
+        user = User.objects.create()
+        List.create_new(first_item_text='new item text', owner=user)
+        new_list = List.objects.first()
+        self.assertEqual(new_list.owner, user)
+
+    def test_create_returns_new_list_object(self):
+        """Тест: create_new возвращает объект списка"""
+        returned = List.create_new(first_item_text='new item text')
+        new_list = List.objects.first()
+        self.assertEqual(returned, new_list)

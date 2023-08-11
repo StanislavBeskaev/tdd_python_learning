@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
-from lists.forms import ExistingListItemForm, ItemForm
+from lists.forms import ExistingListItemForm, ItemForm, NewListForm
 from lists.models import List
 
 
@@ -27,24 +27,16 @@ def view_list(request: HttpRequest, list_id: int) -> HttpResponse:
     return render(request, "list.html", {"list": list_, "form": form})
 
 
-def new_list(request: HttpRequest) -> HttpResponse:
+def new_list(request):
     """Представление для нового списка"""
-    form = ItemForm(data=request.POST)
+    form = NewListForm(data=request.POST)
     if form.is_valid():
-        list_ = List()
-        if request.user.is_authenticated:
-            list_.owner = request.user
-        list_.save()
-        form.save(for_list=list_)
+        list_ = form.save(owner=request.user)
         return redirect(list_)
-    else:
-        return render(request, "home.html", {"form": form})
+    return render(request, 'home.html', {'form': form})
 
 
 def my_lists(request: HttpRequest, email: str) -> HttpResponse:
     """Представление моих списков"""
     owner = User.objects.get(email=email)
-    print("my_lists")
-    print(owner)
-    print(owner.list_set.all())
     return render(request=request, template_name="my_lists.html", context={"owner": owner})

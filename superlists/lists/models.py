@@ -16,6 +16,12 @@ class List(models.Model):
         """Имя"""
         return self.item_set.first().text
 
+    @staticmethod
+    def create_new(first_item_text, owner=None):
+        list_ = List.objects.create(owner=owner)
+        Item.objects.create(text=first_item_text, list=list_)
+        return list_
+
 
 class Item(models.Model):
     """Элемент списка"""
