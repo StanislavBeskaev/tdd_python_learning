@@ -4,7 +4,6 @@ from django.shortcuts import redirect, render
 from lists.forms import ExistingListItemForm, ItemForm, NewListForm
 from lists.models import List
 
-
 User = get_user_model()
 
 
