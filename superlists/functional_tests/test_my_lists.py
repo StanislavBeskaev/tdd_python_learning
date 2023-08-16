@@ -3,7 +3,6 @@ from django.contrib.auth import get_user_model
 from functional_tests.base import FunctionalTest
 from functional_tests.management.commands.create_session import create_pre_authentication_session
 from functional_tests.server_tools import create_session_on_server
-from selenium.webdriver import Keys
 from selenium.webdriver.common.by import By
 
 User = get_user_model()

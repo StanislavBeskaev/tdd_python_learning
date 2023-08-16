@@ -1,4 +1,5 @@
 import os
+from datetime import datetime
 import time
 from typing import Callable
 
@@ -12,6 +13,7 @@ from selenium.webdriver.remote.webelement import WebElement
 
 MAX_WAIT = 2
 WAIT_TIMEOUT = 0.2
+SCREEN_DUMP_LOCATION = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'screendumps')
 
 
 def wait(fn: Callable) -> Callable:
@@ -42,6 +44,16 @@ class FunctionalTest(StaticLiveServerTestCase):
         self.browser = webdriver.Firefox()
 
     def tearDown(self) -> None:
+        if self._test_has_failed():
+            if not os.path.exists(SCREEN_DUMP_LOCATION):
+                os.makedirs(SCREEN_DUMP_LOCATION)
+
+            for index, handle in enumerate(self.browser.window_handles):
+                self._windowid = index
+                self.browser.switch_to.window(handle)
+                self.take_screenshot()
+                self.dump_html()
+
         self.browser.quit()
 
     def add_new_element(self, text: str):
@@ -89,3 +101,28 @@ class FunctionalTest(StaticLiveServerTestCase):
         self.browser.find_element(by=By.NAME, value="email")
         navbar = self.browser.find_element(by=By.CSS_SELECTOR, value=".navbar")
         self.assertNotIn(email, navbar.text)
+
+    def take_screenshot(self):
+        filename = self._get_filename() + '.png'
+        print('screenshotting to', filename)
+        self.browser.get_screenshot_as_file(filename)
+
+    def dump_html(self):
+        filename = self._get_filename() + '.html'
+        print('dumping page HTML to', filename)
+        with open(filename, 'w') as f:
+            f.write(self.browser.page_source)
+
+    def _get_filename(self):
+        timestamp = datetime.now().isoformat().replace(':', '.')[:19]
+        return '{folder}/{classname}.{method}-window{windowid}-{timestamp}'.format(
+            folder=SCREEN_DUMP_LOCATION,
+            classname=self.__class__.__name__,
+            method=self._testMethodName,
+            windowid=self._windowid,
+            timestamp=timestamp
+        )
+
+    def _test_has_failed(self):
+        """Тест не сработал"""
+        return any(error for (method, error) in self._outcome.errors)
