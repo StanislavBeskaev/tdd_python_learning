@@ -41,7 +41,7 @@ class FunctionalTest(StaticLiveServerTestCase):
             reset_database(self.staging_server)
 
     def init_browser(self):
-        self.browser = webdriver.Firefox()
+        self.browser = webdriver.Chrome()
 
     def tearDown(self) -> None:
         if self._test_has_failed():
