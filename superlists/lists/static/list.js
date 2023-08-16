@@ -1,4 +1,6 @@
-window.Superlists = {}
-window.Superlists.initialize = () => {
-  $('input[name="text"]').on('keypress', () => $('.has-error').hide())
-}
+window.Superlists = {};
+window.Superlists.initialize = function () {
+  $('input[name="text"]').on('keypress', function () {
+    $('.has-error').hide();
+  });
+};
