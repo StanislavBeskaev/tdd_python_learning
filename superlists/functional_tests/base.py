@@ -1,5 +1,6 @@
 import os
 from datetime import datetime
+from functools import wraps
 import time
 from typing import Callable
 
@@ -20,6 +21,7 @@ SCREEN_DUMP_LOCATION = os.path.join(os.path.dirname(os.path.abspath(__file__)), 
 
 
 def wait(fn: Callable) -> Callable:
+    @wraps(fn)
     def modified_fn(*args, **kwargs):
         start_time = time.monotonic()
         while True:

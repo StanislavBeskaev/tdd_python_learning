@@ -13,7 +13,7 @@ class ListPage:
 
     def get_table_rows(self) -> list[WebElement]:
         """Получить строки таблицы"""
-        return self.test.browser.find_elements(by=By.CSS_SELECTOR, value="#id_list_table rt")
+        return self.test.browser.find_elements(by=By.CSS_SELECTOR, value="#id_list_table tr")
 
     @wait
     def wait_for_row_in_list_table(self, item_text: str, item_number: int) -> None:
@@ -49,3 +49,7 @@ class ListPage:
         share_box.send_keys(email)
         share_box.send_keys(Keys.ENTER)
         self.test.wait_for(lambda: self.test.assertIn(email, [item.text for item in self.get_shared_with_list()]))
+
+    def get_list_owner(self) -> str:
+        """Получить владельца списка"""
+        return self.test.browser.find_element(by=By.ID, value="id_list_owner").text
