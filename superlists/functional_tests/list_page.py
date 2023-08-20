@@ -41,7 +41,8 @@ class ListPage:
 
     def get_shared_with_list(self) -> list[WebElement]:
         """Получить список от того, кто им делится"""
-        return self.test.browser.find_elements(by=By.CSS_SELECTOR, value=".list-sharee")
+        shared = self.test.browser.find_elements(by=By.CSS_SELECTOR, value="#list-share li")
+        return shared
 
     def share_list_with(self, email: str) -> None:
         """Поделится списком с"""

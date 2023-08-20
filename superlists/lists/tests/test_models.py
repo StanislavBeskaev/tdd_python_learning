@@ -105,3 +105,10 @@ class ListModelTest(TestCase):
         returned = List.create_new(first_item_text='new item text')
         new_list = List.objects.first()
         self.assertEqual(returned, new_list)
+
+    def test_has_shared_with_method(self):
+        """Тест: метод, shared_with"""
+        other = User.objects.create(email="other@example.com")
+        list_ = List.objects.create()
+        # Не должно возбуждать исключение
+        list_.shared_with.add(other.email)

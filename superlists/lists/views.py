@@ -1,3 +1,5 @@
+import logging
+
 from django.contrib.auth import get_user_model
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
@@ -5,6 +7,7 @@ from lists.forms import ExistingListItemForm, ItemForm, NewListForm
 from lists.models import List
 
 User = get_user_model()
+logger = logging.getLogger(__name__)
 
 
 def home_page(request: HttpRequest) -> HttpResponse:
@@ -39,3 +42,14 @@ def my_lists(request: HttpRequest, email: str) -> HttpResponse:
     """Представление моих списков"""
     owner = User.objects.get(email=email)
     return render(request=request, template_name="my_lists.html", context={"owner": owner})
+
+
+def share_list(request: HttpRequest, list_id: int) -> HttpResponse:
+    """Представление для предоставления доступа к списку"""
+    list_ = List.objects.get(id=list_id)
+
+    shared_email = request.POST.get("sharee")
+    if shared_email:
+        list_.shared_with.add(shared_email)
+        logger.info(f"share list {list_id} with '{shared_email}'")
+    return redirect(list_)

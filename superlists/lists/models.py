@@ -1,12 +1,17 @@
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.db import models
 from django.urls import reverse
+
+
+User = get_user_model()
 
 
 class List(models.Model):
     """Список"""
 
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, on_delete=models.CASCADE)
+    shared_with = models.ManyToManyField(User, related_name="shared")
 
     def get_absolute_url(self) -> str:
         return reverse("view_list", args=[self.id])

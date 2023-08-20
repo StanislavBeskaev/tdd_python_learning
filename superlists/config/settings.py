@@ -65,6 +65,7 @@ LOGGING = {
     "loggers": {
         "django": {"handlers": ["console"], "level": "INFO"},
         "accounts": {"handlers": ["console"], "level": "INFO", "propagate": False},
+        "lists": {"handlers": ["console"], "level": "INFO", "propagate": False},
     },
     "root": {"level": "INFO"},
 }
