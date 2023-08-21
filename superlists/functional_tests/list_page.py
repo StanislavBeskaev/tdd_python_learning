@@ -1,8 +1,7 @@
+from functional_tests.base import FunctionalTest, wait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webelement import WebElement
-
-from functional_tests.base import wait, FunctionalTest
 
 
 class ListPage:

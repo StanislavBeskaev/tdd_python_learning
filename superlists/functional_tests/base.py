@@ -1,14 +1,13 @@
 import os
+import time
 from datetime import datetime
 from functools import wraps
-import time
 from typing import Callable
 
 from django.conf import settings
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
-from functional_tests.server_tools import reset_database
 from functional_tests.management.commands.create_session import create_pre_authentication_session
-from functional_tests.server_tools import create_session_on_server
+from functional_tests.server_tools import create_session_on_server, reset_database
 from selenium import webdriver
 from selenium.common.exceptions import WebDriverException
 from selenium.webdriver import Keys
@@ -137,7 +136,7 @@ class FunctionalTest(StaticLiveServerTestCase):
             classname=self.__class__.__name__,
             method=self._testMethodName,
             windowid=self._windowid,
-            timestamp=timestamp
+            timestamp=timestamp,
         )
 
     def _test_has_failed(self):

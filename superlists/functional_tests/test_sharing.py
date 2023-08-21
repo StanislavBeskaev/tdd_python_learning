@@ -1,15 +1,14 @@
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-
 from functional_tests.base import FunctionalTest
 from functional_tests.list_page import ListPage
 from functional_tests.my_list_page import MyListPage
+from selenium import webdriver
+from selenium.webdriver.common.by import By
 
 
 def quit_if_possible(browser):
     try:
         browser.quit()
-    except:
+    except Exception:
         pass
 
 
@@ -50,9 +49,7 @@ class SharingTest(FunctionalTest):
         self.browser.find_element(by=By.LINK_TEXT, value="Get help").click()
 
         # На странице, которую Анцифер видит, говорится, что это список Эдит
-        self.wait_for(lambda: self.assertEqual(
-            list_page.get_list_owner(), "edith@example.com"
-        ))
+        self.wait_for(lambda: self.assertEqual(list_page.get_list_owner(), "edith@example.com"))
 
         # Он добавляет элемент в список
         list_page.add_list_item("Hi Edith")
@@ -61,5 +58,3 @@ class SharingTest(FunctionalTest):
         self.browser = edith_browser
         self.browser.refresh()
         list_page.wait_for_row_in_list_table("Hi Edith", 2)
-
-
