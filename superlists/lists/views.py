@@ -1,9 +1,9 @@
 import logging
 
 from django.contrib.auth import get_user_model
-from django.views.generic import FormView, CreateView
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
+from django.views.generic import CreateView, DetailView, FormView
 from lists.forms import ExistingListItemForm, ItemForm, NewListForm
 from lists.models import List
 
@@ -13,26 +13,26 @@ logger = logging.getLogger(__name__)
 
 class HomePageView(FormView):
     """Представление домашней страницы"""
+
     template_name = "home.html"
     form_class = ItemForm
 
 
-def view_list(request: HttpRequest, list_id: int) -> HttpResponse:
-    """Представление списка элементов"""
-    list_ = List.objects.get(id=list_id)
-    form = ExistingListItemForm(for_list=list_)
+class ViewAndAddToListView(DetailView, CreateView):
+    """Представления для просмотра и добавления в список элементов"""
 
-    if request.method == "POST":
-        form = ExistingListItemForm(for_list=list_, data=request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect(list_)
+    model = List
+    template_name = "list.html"
+    form_class = ExistingListItemForm
 
-    return render(request, "list.html", {"list": list_, "form": form})
+    def get_form(self, form_class=None):
+        self.object = self.get_object()
+        return self.form_class(for_list=self.object, data=self.request.POST)
 
 
 class NewListView(CreateView, HomePageView):
     """Представление для нового списка"""
+
     form_class = NewListForm
 
     def form_valid(self, form: NewListForm) -> HttpResponse:
