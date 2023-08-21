@@ -1,7 +1,7 @@
 import logging
 
 from django.contrib.auth import get_user_model
-from django.views.generic import FormView
+from django.views.generic import FormView, CreateView
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
 from lists.forms import ExistingListItemForm, ItemForm, NewListForm
@@ -31,13 +31,13 @@ def view_list(request: HttpRequest, list_id: int) -> HttpResponse:
     return render(request, "list.html", {"list": list_, "form": form})
 
 
-def new_list(request):
+class NewListView(CreateView, HomePageView):
     """Представление для нового списка"""
-    form = NewListForm(data=request.POST)
-    if form.is_valid():
-        list_ = form.save(owner=request.user)
+    form_class = NewListForm
+
+    def form_valid(self, form: NewListForm) -> HttpResponse:
+        list_ = form.save(owner=self.request.user)
         return redirect(list_)
-    return render(request, 'home.html', {'form': form})
 
 
 def my_lists(request: HttpRequest, email: str) -> HttpResponse:
