@@ -1,6 +1,7 @@
 import logging
 
 from django.contrib.auth import get_user_model
+from django.views.generic import FormView
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
 from lists.forms import ExistingListItemForm, ItemForm, NewListForm
@@ -10,9 +11,10 @@ User = get_user_model()
 logger = logging.getLogger(__name__)
 
 
-def home_page(request: HttpRequest) -> HttpResponse:
-    """Домашняя страница"""
-    return render(request, "home.html", {"form": ItemForm()})
+class HomePageView(FormView):
+    """Представление домашней страницы"""
+    template_name = "home.html"
+    form_class = ItemForm
 
 
 def view_list(request: HttpRequest, list_id: int) -> HttpResponse:

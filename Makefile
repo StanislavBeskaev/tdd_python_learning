@@ -31,7 +31,7 @@ flake:
 
 
 coverage:
-	cd superlists && coverage run manage.py test lists && coverage report -m && cd ..
+	cd superlists && coverage run manage.py test lists accounts && coverage report -m && cd ..
 
 test_m:
 	cd superlists && python manage.py test lists accounts && cd ..
