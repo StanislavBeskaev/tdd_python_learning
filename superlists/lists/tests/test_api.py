@@ -33,3 +33,12 @@ class ListAPITest(TestCase):
                 {"id": item_2.id, "text": item_2.text},
             ]
         )
+
+    def test_POSTing_a_new_item(self):
+        """Тест: создание нового элемента через POST"""
+        list_ = List.objects.create()
+        response = self.client.post(self.base_url.format(list_.id), {"text": "new item"})
+
+        self.assertEqual(response.status_code, 201)
+        new_item = list_.item_set.get()
+        self.assertEqual(new_item.text, "new item")
