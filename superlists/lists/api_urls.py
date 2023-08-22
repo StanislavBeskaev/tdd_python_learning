@@ -4,5 +4,5 @@ from lists import api
 
 
 urlpatterns = [
-    path("lists/<int:list_id>/", api.list_, name="api_list"),
+    path("lists/<int:list_id>/", api.list_handler, name="api_list"),
 ]
