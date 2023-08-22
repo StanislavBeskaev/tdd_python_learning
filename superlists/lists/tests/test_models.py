@@ -91,7 +91,7 @@ class ListModelTest(TestCase):
         new_item = Item.objects.first()
         self.assertEqual(new_item.text, 'new item text')
         new_list = List.objects.first()
-        self.assertEqual(new_item.list_, new_list)
+        self.assertEqual(new_item.list, new_list)
 
     def test_create_new_optionally_saves_owner(self):
         """Тест: создание списка со владельцем"""

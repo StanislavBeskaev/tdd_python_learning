@@ -29,7 +29,7 @@ class ItemFormTest(TestCase):
         new_item = form.save(for_list=list_)
         self.assertEqual(new_item, Item.objects.first())
         self.assertEqual(new_item.text, "do me")
-        self.assertEqual(new_item.list_, list_)
+        self.assertEqual(new_item.list, list_)
 
     def test_form_validation_for_duplicate_items(self):
         """Тест: валидация формы для повторных элементов"""
