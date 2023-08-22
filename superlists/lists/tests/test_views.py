@@ -120,7 +120,7 @@ class ListViewTest(TestCase):
         self.assertEqual(Item.objects.count(), 1)
         new_item = Item.objects.first()
         self.assertEqual(new_item.text, "A new item for an existing list")
-        self.assertEqual(new_item.list, correct_list)
+        self.assertEqual(new_item.list_, correct_list)
 
     def test_POST_redirects_to_list_view(self):
         """Тест: post-запрос переадресуется в представление списка"""
