@@ -1,5 +1,4 @@
 django==4.2.3; python_version >= "3.8"
 gunicorn==21.2.0
 selenium~=4.10.0
-behave-django
 behave-django~=1.4.0
