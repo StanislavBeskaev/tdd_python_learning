@@ -7,11 +7,6 @@
 {% block table %}
 <h2>Владелец: <span id="id_list_owner">{{ list.owner.email }}</span></h2>
 <table id="id_list_table" class="table">
-  {% for item in list.item_set.all %}
-    <tr>
-      <td>{{ forloop.counter }}: {{ item.text }}</td>
-    </tr>
-  {% endfor %}
 </table>
 
 <div class="d-flex flex-row">
@@ -30,5 +25,13 @@
 
 </div>
 
-{% endblock %}
+{% endblock table%}
 
+{% block scripts %}
+<script>
+  $(document).ready(() => {
+    const url = "{% url 'api_list' list.id %}"
+    window.Superlists.initialize(url)
+  })
+</script>
+{% endblock scripts %}
