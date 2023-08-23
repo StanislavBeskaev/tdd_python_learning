@@ -26,6 +26,7 @@ window.Superlists.initialize = function (url) {
         'csrfmiddlewaretoken': form.find('input[name="csrfmiddlewaretoken"]').val(),
       }).done(function () {
         window.Superlists.updateItems(url)
+        $('input[name="text"]').val("")
       })
     })
   }
