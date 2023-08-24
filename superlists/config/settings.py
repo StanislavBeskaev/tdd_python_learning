@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'lists',
     'accounts',
     'functional_tests',
-    'behave_django',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
