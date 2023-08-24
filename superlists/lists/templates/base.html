@@ -53,13 +53,15 @@
         <form id="id_item_form" method="POST" action="{% block form_action %} {% endblock %}">
           {% csrf_token %}
           {{ form.text }}
-          {% if form.errors %}
-            <div class="form-group has-error">
-              <span class="help-block">{{ form.text.errors }}</span>
+          <div class="form-group has-error">
+            <div class="help-block">
+              {% if form.errors %}
+                {{ form.text.errors }}
+              {% endif %}
             </div>
-          {% endif %}
+          </div>
         </form>
-      {% endblock list_form%}
+      {% endblock list_form %}
       </div>
     </div>
   </div>
@@ -67,7 +69,7 @@
   <div class="row">
     <div class="col-md-6 col-md-offset-3">
       {% block table %}
-      {% endblock table%}
+      {% endblock table %}
     </div>
   </div>
 

@@ -85,24 +85,6 @@ class ListViewTest(TestCase):
         response = self.client.get(f"/lists/{list_.id}/")
         self.assertTemplateUsed(response, "list.html")
 
-    def test_displays_only_items_for_that_list(self):
-        """Тест: отображаются элементы только для этого списка'"""
-        correct_list = List.objects.create()
-        new_item_texts = ("itemey 1", "itemey 2")
-        [Item.objects.create(text=item_text, list=correct_list) for item_text in new_item_texts]
-
-        other_list = List.objects.create()
-        other_list_item_texts = ("другой элемент 1 списка", "другой элемент 2 списка")
-        [Item.objects.create(text=item_text, list=other_list) for item_text in other_list_item_texts]
-
-        response = self.client.get(f"/lists/{correct_list.id}/")
-
-        for item_text in new_item_texts:
-            self.assertContains(response, item_text)
-
-        for item_text in other_list_item_texts:
-            self.assertNotContains(response, item_text)
-
     def test_passed_correct_list_to_template(self):
         """Тест: в шаблон передаётся правильный список"""
         _ = List.objects.create()

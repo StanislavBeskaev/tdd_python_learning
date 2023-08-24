@@ -27,7 +27,15 @@ window.Superlists.initialize = function (url) {
       }).done(function () {
         window.Superlists.updateItems(url)
         $('input[name="text"]').val("")
+      }).fail(function (xhr) {
+        $('.has-error').show();
+        if (xhr.responseJSON && xhr.responseJSON.error) {
+          $('.has-error .help-block').text(xhr.responseJSON.error);
+        } else {
+          $('.has-error .help-block').text('Error talking to server. Please try again.');
+        }
       })
+
     })
   }
 }

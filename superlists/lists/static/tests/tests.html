@@ -112,6 +112,22 @@
     const request = server.requests[0]
     assert.equal(request.method, "GET")
   })
+  QUnit.test("should display errors on post failure", function (assert) {
+    const url = '/listitemsapi/'
+    window.Superlists.initialize(url)
+    server.respondWith('POST', url, [
+      400,
+      {"Content-Type": "application/json"},
+      JSON.stringify({'error': 'something is amiss'})
+    ])
+    $('.has-error').hide()
+
+    $('#id_item_form').submit()
+    server.respond(); // post
+
+    assert.equal($('.has-error').is(':visible'), true)
+    assert.equal($('.has-error .help-block').text(), 'something is amiss')
+})
 </script>
 </body>
 </html>
