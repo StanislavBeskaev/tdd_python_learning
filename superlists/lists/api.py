@@ -1,24 +1,43 @@
-import json
+from rest_framework import routers, serializers, viewsets
+from rest_framework.validators import UniqueTogetherValidator
 
-from django.http import HttpRequest, HttpResponse
-
-from lists.forms import ExistingListItemForm
-from lists.models import List
+from lists.forms import EMPTY_ITEM_ERROR, DUPLICATE_ITEM_ERROR
+from lists.models import List, Item
 
 
-def list_handler(request: HttpRequest, list_id: int) -> HttpResponse:
-    list_ = List.objects.get(id=list_id)
-    if request.method == "POST":
-        form = ExistingListItemForm(for_list=list_, data=request.POST)
-        if form.is_valid():
-            form.save()
-            return HttpResponse(status=201)
-        else:
-            return HttpResponse(
-                content=json.dumps({'error': form.errors['text'][0]}),
-                content_type='application/json',
-                status=400
+class ItemSerializer(serializers.ModelSerializer):
+    text = serializers.CharField(allow_blank=False, error_messages={"blank": EMPTY_ITEM_ERROR})
+
+    class Meta:
+        model = Item
+        fields = ("id", "list", "text")
+        validators = [
+            UniqueTogetherValidator(
+                queryset=Item.objects.all(),
+                fields=("list", "text"),
+                message=DUPLICATE_ITEM_ERROR
             )
+        ]
 
-    items = [{"id": item.id, "text": item.text} for item in list_.item_set.all()]
-    return HttpResponse(content=json.dumps(items), content_type="application/json")
+
+class ListSerializer(serializers.ModelSerializer):
+    items = ItemSerializer(many=True, source="item_set")
+
+    class Meta:
+        model = List
+        fields = ("id", "items",)
+
+
+class ListViewSet(viewsets.ModelViewSet):
+    queryset = List.objects.all()
+    serializer_class = ListSerializer
+
+
+class ItemViewSet(viewsets.ModelViewSet):
+    serializer_class = ItemSerializer
+    queryset = Item.objects.all()
+
+
+router = routers.SimpleRouter()
+router.register("lists", ListViewSet)
+router.register("items", ItemViewSet)
